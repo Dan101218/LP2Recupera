@@ -1,18 +1,24 @@
 import { Routes } from '@angular/router';
-import { DoctorComponent } from './doctor/doctor.component';
-import { EspecialidadComponent } from './especialidad/especialidad.component';
+import { NotasComponent } from './notas/notas.component';
+import { CursoComponent } from './cursos/curso.component';
+import { AlumnoComponent } from './alumnos/alumnos.component';
 import { NavegarComponent } from './component/navegar/navegar.component';
 
 export const routes: Routes = [
     { 
-        path: 'doctor',
-        component: DoctorComponent,
-        title: 'Doctores'
+        path: 'alumno',
+        component: AlumnoComponent,
+        title: 'Alumnos'
     },
     {
-        path: 'especialidades',
-        component: EspecialidadComponent,
-        title: 'Especialidades' 
+        path: 'cursos',
+        component: CursoComponent,
+        title: 'Cursos' 
+    },
+    {
+        path: 'notas',
+        component: NotasComponent,
+        title: 'Notas' 
     },
     {
         path: '**',

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { EspecialidadService } from './services/especialidad.service';
+import { CursoService } from './services/curso.service';
 import { MessageService } from 'primeng/api';
-import { Especialidad } from './models/especialidad';
+import { Curso } from './models/curso';
 import { ConfirmationService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
@@ -16,22 +16,22 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { NavegarComponent } from '../component/navegar/navegar.component';
 
 @Component({
-  selector: 'app-especialidad',
+  selector: 'app-curso',
   standalone: true,
   imports: [TableModule, ButtonModule, CommonModule, FormsModule, InputTextModule, 
     DialogModule, ToastModule, ConfirmDialogModule, ProgressSpinnerModule, 
     SkeletonModule, NavegarComponent],
   providers: [MessageService, ConfirmationService],
-  templateUrl: './especialidad.component.html',
-  styleUrl: './especialidad.component.css'
+  templateUrl: './curso.component.html',
+  styleUrls: ['./curso.component.css']
 })
-export class EspecialidadComponent {
+export class CursoComponent {
   totalRecords: number = 0;
   cargando: boolean = false;
-  especialidades: Especialidad[] = [];
+  cursos: Curso[] = [];
   titulo: string = '';
   opc: string = '';
-  especialidad = new Especialidad();
+  curso = new Curso();
   op = 0;
   visible: boolean = false;
   nombreTemp: string = '';
@@ -39,28 +39,28 @@ export class EspecialidadComponent {
   filtroNombre: string = '';
 
   constructor(
-    private especialidadService: EspecialidadService,
+    private CursoService: CursoService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
-    this.listarEspecialidades();
+    this.listarCursos();
   }
 
-  filtrarEspecialidades() {
+  filtrarCursos() {
     if (this.filtroNombre) {
-      return this.especialidades.filter(especialidad => 
-        especialidad.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())
+      return this.cursos.filter(curso => 
+        curso.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())
       );
     }
-    return this.especialidades;
+    return this.cursos;
   }
 
-  listarEspecialidades() {
-    this.especialidadService.getEspecialidades().subscribe({
+  listarCursos() {
+    this.CursoService.getCursos().subscribe({
       next: (data) => {
-        this.especialidades = data;
+        this.cursos = data;
         this.totalRecords = data.length;
         this.cargando = false;
       },
@@ -69,19 +69,19 @@ export class EspecialidadComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudo cargar la lista de especialidades',
+          detail: 'No se pudo cargar la lista de cursos',
         });
       },
     });
   }
 
   actualizarLista() {
-    this.listarEspecialidades();
-    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Lista de especialidades actualizada' });
+    this.listarCursos();
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Lista de cursos actualizada' });
   }
 
   showDialogCreate() {
-    this.titulo = 'Crear Especialidad';
+    this.titulo = 'Crear Curso';
     this.opc = 'Agregar';
     this.op = 0;
     this.nombreTemp = '';
@@ -89,87 +89,87 @@ export class EspecialidadComponent {
   }
 
   showDialogEdit(id: number) {
-    this.titulo = 'Editar Especialidad';
+    this.titulo = 'Editar Curso';
     this.opc = 'Editar';
-    this.especialidadService.getEspecialidadById(id).subscribe((data) => {
-      this.especialidad = data;
-      this.nombreTemp = this.especialidad.nombre;
+    this.CursoService.getCursoById(id).subscribe((data) => {
+      this.curso = data;
+      this.nombreTemp = this.curso.nombre;
       this.op = 1;
       this.visible = true;
     });
   }
 
-  deleteEspecialidad(id: number) {
+  deleteCurso(id: number) {
     this.isDeleteInProgress = true;
-    this.especialidadService.deleteEspecialidad(id).subscribe({
+    this.CursoService.deleteCurso(id).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
           summary: 'Correcto',
-          detail: 'Especialidad eliminada',
+          detail: 'Curso eliminado',
         });
         this.isDeleteInProgress = false;
-        this.listarEspecialidades();
+        this.listarCursos();
       },
       error: () => {
         this.isDeleteInProgress = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudo eliminar la especialidad',
+          detail: 'No se pudo eliminar el curso',
         });
       },
     });
   }
 
-  addEspecialidad(): void {
+  addCurso(): void {
     if (!this.nombreTemp || this.nombreTemp.trim() === '') {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
-        detail: 'El nombre de la especialidad no puede estar vacío',
+        detail: 'El nombre del curso no puede estar vacío',
       });
       return;
     }
 
-    this.especialidad.nombre = this.nombreTemp;
-    this.especialidadService.createEspecialidad(this.especialidad).subscribe({
+    this.curso.nombre = this.nombreTemp;
+    this.CursoService.createCurso(this.curso).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
           summary: 'Correcto',
-          detail: 'Especialidad registrada',
+          detail: 'Curso registrado',
         });
-        this.listarEspecialidades();
+        this.listarCursos();
         this.op = 0;
       },
       error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudo agregar la especialidad',
+          detail: 'No se pudo agregar el curso',
         });
       },
     });
     this.visible = false;
   }
 
-  editEspecialidad() {
-    this.especialidadService.updateEspecialidad(this.especialidad, this.especialidad.id).subscribe({
+  editCurso() {
+    this.CursoService.updateCurso(this.curso, this.curso.id).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
           summary: 'Correcto',
-          detail: 'Especialidad editada',
+          detail: 'Curso editado',
         });
-        this.listarEspecialidades();
+        this.listarCursos();
         this.op = 0;
       },
       error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudo editar la especialidad',
+          detail: 'No se pudo editar el curso',
         });
       },
     });
@@ -178,11 +178,11 @@ export class EspecialidadComponent {
 
   opcion(): void {
     if (this.op == 0) {
-      this.addEspecialidad();
+      this.addCurso();
       this.limpiar();
     } else if (this.op == 1) {
-      this.especialidad.nombre = this.nombreTemp;
-      this.editEspecialidad();
+      this.curso.nombre = this.nombreTemp;
+      this.editCurso();
       this.limpiar();
     } else {
       this.limpiar();
@@ -193,7 +193,7 @@ export class EspecialidadComponent {
     this.titulo = '';
     this.opc = '';
     this.op = 0;
-    this.especialidad.id = 0;
-    this.especialidad.nombre = '';
+    this.curso.id = 0;
+    this.curso.nombre = '';
   }
 }

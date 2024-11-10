@@ -1,4 +1,4 @@
-export class Especialidad {
+export class Curso {
     id: number;
     nombre: string;
 
